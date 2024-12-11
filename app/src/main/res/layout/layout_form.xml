@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <!-- Título -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mapa Astral"
+            android:textSize="28sp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Campo Nome -->
+        <EditText
+            android:id="@+id/inputName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Digite seu nome"
+            android:inputType="textPersonName"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"
+            android:textColor="@android:color/black"
+            />
+
+        <!-- Campo Cidade de Nascimento -->
+        <EditText
+            android:id="@+id/inputCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Cidade de nascimento"
+            android:inputType="text"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@android:color/black"
+            />
+
+        <!-- Seção de Data e Hora -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <!-- Campo Data -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <EditText
+                    android:id="@+id/inputDate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Selecione a data"
+                    android:focusable="false"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp"
+                    android:textColor="@android:color/black"
+                     />
+
+                <ImageView
+                    android:id="@+id/iconDate"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/calendar"
+                    android:contentDescription="Ícone de calendário"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Campo Hora -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp">
+
+                <EditText
+                    android:id="@+id/inputTime"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Selecione a hora"
+                    android:focusable="false"
+                    android:background="@android:drawable/edit_text"
+                    android:padding="12dp"
+                    android:textColor="@android:color/black"
+                     />
+
+                <ImageView
+                    android:id="@+id/iconTime"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/schedule"
+                    android:contentDescription="Ícone de relógio"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Botão GERAR -->
+        <Button
+            android:id="@+id/buttonGenerate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GERAR MAPA ASTRAL"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#9B6CFF"
+            android:padding="12dp"
+            android:layout_marginTop="24dp"
+            android:layout_gravity="center"
+            android:fontFamily="sans-serif-medium" />
+
+    </LinearLayout>
+
+</ScrollView>
