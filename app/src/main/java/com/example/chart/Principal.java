@@ -5,13 +5,24 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.IOException;
 import java.util.Calendar;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
 public class Principal extends Activity {
-    EditText inputDate, inputTime;
+    EditText inputDate, inputTime, inputName, inputCity;
     ImageView iconDate, iconTime;
+    Button buttonGenerate;
+    TextView textResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,8 +31,12 @@ public class Principal extends Activity {
 
         inputDate = findViewById(R.id.inputDate);
         inputTime = findViewById(R.id.inputTime);
+        inputName = findViewById(R.id.inputName);
+        inputCity = findViewById(R.id.inputCity);
         iconDate = findViewById(R.id.iconDate);
         iconTime = findViewById(R.id.iconTime);
+        buttonGenerate = findViewById(R.id.buttonGenerate);
+        textResult = findViewById(R.id.textResult);
 
         // Abrir diálogo de seleção de data
         View.OnClickListener dateClickListener = v -> {
@@ -31,7 +46,7 @@ public class Principal extends Activity {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             new DatePickerDialog(Principal.this, (view, year1, month1, dayOfMonth) -> {
-                inputDate.setText(dayOfMonth + "/" + (month1 + 1) + "/" + year1);
+                inputDate.setText(dayOfMonth + "|" + (month1 + 1) + "|" + year1);
             }, year, month, day).show();
         };
 
@@ -45,11 +60,54 @@ public class Principal extends Activity {
             int minute = calendar.get(Calendar.MINUTE);
 
             new TimePickerDialog(Principal.this, (view, hourOfDay, minute1) -> {
-                inputTime.setText(String.format("%02d:%02d", hourOfDay, minute1));
+                inputTime.setText(String.format("%02d|%02d", hourOfDay, minute1));
             }, hour, minute, true).show();
         };
 
         inputTime.setOnClickListener(timeClickListener);
         iconTime.setOnClickListener(timeClickListener);
+
+        // Configurar botão para fazer a requisição e exibir o resultado
+        buttonGenerate.setOnClickListener(v -> {
+            String name = inputName.getText().toString();
+            String city = inputCity.getText().toString();
+            String date = inputDate.getText().toString();
+            String time = inputTime.getText().toString();
+
+            // Verificar se todos os campos estão preenchidos
+            if (name.isEmpty() || city.isEmpty() || date.isEmpty() || time.isEmpty()) {
+                Toast.makeText(Principal.this, "Por favor, preencha todos os campos", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Montar a URL com os parâmetros
+            String url = "https://api.astrologico.org/v1/chart?name=" + name + "&city=" + city + "&date=" + date + "&time=" + time + "&key=4a49c78861a5d1aff676183d7483fc66fd18bbb3186186a18931640c";
+            fazerRequisicaoApi(url);
+        });
+    }
+
+    private void fazerRequisicaoApi(String url) {
+        ApiClient.fazerRequisicaoGET(url, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(() ->
+                        Toast.makeText(Principal.this, "Falha na requisição", Toast.LENGTH_SHORT).show()
+                );
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    final String resposta = response.body().string();
+                    runOnUiThread(() ->
+                            textResult.setText(resposta) // Exibe o retorno no TextView
+                    );
+                } else {
+                    runOnUiThread(() ->
+                            Toast.makeText(Principal.this, "Erro: " + response.code(), Toast.LENGTH_SHORT).show()
+                    );
+                }
+            }
+        });
     }
 }
