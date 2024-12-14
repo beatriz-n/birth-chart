@@ -3,6 +3,7 @@ package com.example.chart;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -81,8 +82,9 @@ public class Principal extends Activity {
             }
 
             // Montar a URL com os parâmetros
-            String url = "https://api.astrologico.org/v1/chart?name=" + name + "&city=" + city + "&date=" + date + "&time=" + time + "&key=4a49c78861a5d1aff676183d7483fc66fd18bbb3186186a18931640c";
+            String url = "https://api.astrologico.org/v1/chart?localdate=" + date +"|"+ time + "&querylocation=" + city + "&houses=15&key=4a49c78861a5d1aff676183d7483fc66fd18bbb3186186a18931640c";
             fazerRequisicaoApi(url);
+            Toast.makeText(this, "Olá, mundo! " + url, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -95,19 +97,24 @@ public class Principal extends Activity {
                 );
             }
 
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     final String resposta = response.body().string();
-                    runOnUiThread(() ->
-                            textResult.setText(resposta) // Exibe o retorno no TextView
-                    );
+                    runOnUiThread(() -> {
+                        // Iniciar ChartActivity e passar o JSON como extra
+                        Intent intent = new Intent(Principal.this, ChartActivity.class);
+                        intent.putExtra("json_data", resposta);
+                        startActivity(intent);
+                    });
                 } else {
                     runOnUiThread(() ->
                             Toast.makeText(Principal.this, "Erro: " + response.code(), Toast.LENGTH_SHORT).show()
                     );
                 }
             }
+
         });
     }
 }
