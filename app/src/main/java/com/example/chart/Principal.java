@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -37,7 +38,6 @@ public class Principal extends Activity {
         iconDate = findViewById(R.id.iconDate);
         iconTime = findViewById(R.id.iconTime);
         buttonGenerate = findViewById(R.id.buttonGenerate);
-        textResult = findViewById(R.id.textResult);
 
         // Abrir diálogo de seleção de data
         View.OnClickListener dateClickListener = v -> {
@@ -68,7 +68,7 @@ public class Principal extends Activity {
         inputTime.setOnClickListener(timeClickListener);
         iconTime.setOnClickListener(timeClickListener);
 
-        // Configurar botão para fazer a requisição e exibir o resultado
+        // Configurar botão para fazer a requisição e exibir o resultado --Evento 1
         buttonGenerate.setOnClickListener(v -> {
             String name = inputName.getText().toString();
             String city = inputCity.getText().toString();
@@ -83,12 +83,32 @@ public class Principal extends Activity {
 
             // Montar a URL com os parâmetros
             String url = "https://api.astrologico.org/v1/chart?localdate=" + date +"|"+ time + "&querylocation=" + city + "&houses=15&key=4a49c78861a5d1aff676183d7483fc66fd18bbb3186186a18931640c";
-            fazerRequisicaoApi(url);
+            fazerRequisicaoApi(url, name);
             Toast.makeText(this, "Olá, mundo! " + url, Toast.LENGTH_SHORT).show();
         });
+
+        // Função para exibir a mensagem do histórico --Evento 2
+        inputName.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                Toast.makeText(
+                        Principal.this,
+                        "Segure o botão GERAR para exibir o histórico",
+                        Toast.LENGTH_LONG
+                ).show();
+            }
+        });
+
+        // Função para abrir o histórico ao segurar o botão --Evento 3
+        buttonGenerate.setOnLongClickListener(v -> {
+            Intent intent = new Intent(Principal.this, ChartActivityHistory.class);
+            startActivity(intent);
+
+            return true;
+        });
+
     }
 
-    private void fazerRequisicaoApi(String url) {
+    private void fazerRequisicaoApi(String url, String name) {
         ApiClient.fazerRequisicaoGET(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -106,6 +126,7 @@ public class Principal extends Activity {
                         // Iniciar ChartActivity e passar o JSON como extra
                         Intent intent = new Intent(Principal.this, ChartActivity.class);
                         intent.putExtra("json_data", resposta);
+                        intent.putExtra("nome", name);
                         startActivity(intent);
                     });
                 } else {

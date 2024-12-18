@@ -22,6 +22,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChartActivity" />
+        <activity android:name=".ChartActivityHistory" />
     </application>
 
 </manifest>
