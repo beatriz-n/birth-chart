@@ -84,7 +84,6 @@ public class Principal extends Activity {
             // Montar a URL com os parâmetros
             String url = "https://api.astrologico.org/v1/chart?localdate=" + date +"|"+ time + "&querylocation=" + city + "&houses=15&key=4a49c78861a5d1aff676183d7483fc66fd18bbb3186186a18931640c";
             fazerRequisicaoApi(url, name);
-            Toast.makeText(this, "Olá, mundo! " + url, Toast.LENGTH_SHORT).show();
         });
 
         // Função para exibir a mensagem do histórico --Evento 2
